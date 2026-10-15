@@ -9,10 +9,10 @@ public class NetworkUi : MonoBehaviour
     {
         if(!NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer)
         {
-            if (GUI.Button(new Rect(10, 10, 100, 30), "Host"))
+            if (GUI.Button(new Rect(20, 20, 200, 60), "Host"))
                 NetworkManager.Singleton.StartHost();
 
-            if (GUI.Button(new Rect(10, 50, 100, 30), "Client"))
+            if (GUI.Button(new Rect(20, 100, 200, 60), "Client"))
                 NetworkManager.Singleton.StartClient();
         }
     }

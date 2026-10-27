@@ -7,7 +7,8 @@ public class PlayerInput : NetworkBehaviour
 {
     [SerializeField] private PlayerController1 playerController;
 
-    private void Awake()
+
+	private void Awake()
     {
         if (playerController == null)
         {
@@ -41,7 +42,12 @@ public class PlayerInput : NetworkBehaviour
             Keyboard.current.upArrowKey.isPressed)
             v += 1f;
 
-        Vector2 input = Vector2.ClampMagnitude( new Vector2(h, v), 1f);
+		if (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)
+		{
+			playerController.RequestInteract();
+		}
+
+		Vector2 input = Vector2.ClampMagnitude( new Vector2(h, v), 1f);
 
         playerController.SendMovementInput(input);
 

@@ -27,10 +27,14 @@ public class PlayerController1 : NetworkBehaviour
 
     [SerializeField] private GameObject spawnPoint;
 
+    [SerializeField] GameObject text;
+
+	private NetworkGrabbable nearbyObject;
+	private NetworkGrabbable currentHeldObject;
 
 
-    // NetworkVariable que almacena el color del jugador
-    private NetworkVariable<Color> playerColor = new NetworkVariable<Color>(
+	// NetworkVariable que almacena el color del jugador
+	private NetworkVariable<Color> playerColor = new NetworkVariable<Color>(
         Color.white,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
@@ -205,8 +209,82 @@ public class PlayerController1 : NetworkBehaviour
 		rb.AddForce(pushDirection * pushForce, ForceMode.Impulse);
 	}
 
+	public void RequestInteract()
+	{
+		// Si no llevamos nada y hay un objeto cerca -> Coger
+		if (currentHeldObject == null && nearbyObject != null)
+		{
+			Debug.Log("[INTERACT] Intentando COGER objeto...");
+			currentHeldObject = nearbyObject;
+			RequestGrabServerRpc(currentHeldObject.GetComponent<NetworkObject>());
 
-    public void SendMovementInput(Vector2 input)
+			nearbyObject = null;
+			if (text != null) text.SetActive(false);
+		}
+		// Si ya llevamos un objeto -> Lanzar
+		else if (currentHeldObject != null)
+		{
+			Debug.Log("[INTERACT] Intentando LANZAR objeto...");
+			// Calculamos la fuerza hacia adelante del jugador
+			Vector3 throwForceDir = transform.forward * 10f + Vector3.up * 2f; // Impulso hacia adelante y un poco hacia arriba
+			RequestReleaseServerRpc(currentHeldObject.GetComponent<NetworkObject>(), throwForceDir);
+
+			currentHeldObject = null;
+        }
+        else
+        {
+			Debug.Log("[INTERACT] No hay objeto cerca ni objeto en mano.");
+		}
+	}
+
+	[ServerRpc]
+	private void RequestGrabServerRpc(NetworkObjectReference objRef)
+	{
+		if (objRef.TryGet(out NetworkObject netObj))
+		{
+			if (netObj.TryGetComponent<NetworkGrabbable>(out NetworkGrabbable grabbable))
+			{
+				grabbable.Grab(GetComponent<NetworkObject>());
+			}
+		}
+	}
+
+	[ServerRpc]
+	private void RequestReleaseServerRpc(NetworkObjectReference objRef, Vector3 force)
+	{
+		if (objRef.TryGet(out NetworkObject netObj))
+		{
+			if (netObj.TryGetComponent<NetworkGrabbable>(out NetworkGrabbable grabbable))
+			{
+				grabbable.Release(force);
+			}
+		}
+	}
+
+	private void OnTriggerEnter(Collider other)
+	{
+		if (other.TryGetComponent<NetworkGrabbable>(out NetworkGrabbable grabbable))
+		{
+			nearbyObject = grabbable;
+			text.SetActive(true);
+		}
+	}
+
+	private void OnTriggerExit(Collider other)
+	{
+		if (other.TryGetComponent<NetworkGrabbable>(out NetworkGrabbable grabbable))
+		{
+			if (nearbyObject == grabbable)
+			{
+				nearbyObject = null;
+				text.SetActive(false);
+			}
+		}
+	}
+
+
+
+	public void SendMovementInput(Vector2 input)
     {
         SubmitInputServerRpc(input);
     }

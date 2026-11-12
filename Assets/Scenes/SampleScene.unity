@@ -1465,7 +1465,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 150fcd28065bcf648bfa67063e12457d, type: 2}
+  - {fileID: 2100000, guid: e561379308e722b48a64ffd0342cf3b9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1662,6 +1662,10 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 1425958866
       objectReference: {fileID: 0}
+    - target: {fileID: 6972887011827171194, guid: 44ee10efeabf6ad4db5060408dc23105, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 4fed764640496b144b8f38e6c2359005, type: 2}
     - target: {fileID: 7459451700105587288, guid: 44ee10efeabf6ad4db5060408dc23105, type: 3}
       propertyPath: m_Name
       value: SpinningRectangle
@@ -1731,6 +1735,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9063245069587575609, guid: 3de456100ae13734cbaed4ddbf4aa312, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7adae6f332aef734e919ca660c083e5c, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

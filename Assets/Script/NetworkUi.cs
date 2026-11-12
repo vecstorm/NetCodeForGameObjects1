@@ -1,19 +1,27 @@
 using Unity.Netcode;
 using UnityEngine;
 
-public class NetworkUi : MonoBehaviour
+public class NetworkUI : MonoBehaviour
 {
-
-
-    private void OnGUI()
+    void OnGUI()
     {
-        if(!NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer)
-        {
-            if (GUI.Button(new Rect(20, 20, 200, 60), "Host"))
-                NetworkManager.Singleton.StartHost();
+        // Comprobar que el NetworkManager sigue existiendo
+        NetworkManager manager = NetworkManager.Singleton;
 
-            if (GUI.Button(new Rect(20, 100, 200, 60), "Client"))
-                NetworkManager.Singleton.StartClient();
+        if (manager == null)
+            return;
+
+        if (!manager.IsClient && !manager.IsServer)
+        {
+            if (GUI.Button(new Rect(10, 10, 100, 30), "Host"))
+            {
+                manager.StartHost();
+            }
+
+            if (GUI.Button(new Rect(10, 50, 100, 30), "Client"))
+            {
+                manager.StartClient();
+            }
         }
     }
 }

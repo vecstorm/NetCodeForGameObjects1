@@ -145,10 +145,10 @@ public class PlayerController1 : NetworkBehaviour
 	/// </summary>
 	/// <param name="input"></param>
 	[ServerRpc]
-    private void SubmitInputServerRpc(Vector2 input)
+    private void SubmitInputServerRpc(Vector2 input, float cameraYAw)
     {
         // El servidor recibe la dirección pedida por el cliente
-        movement.SetInput(input);
+        movement.SetInput(input, cameraYAw);
     }
 
     [ServerRpc]
@@ -284,9 +284,9 @@ public class PlayerController1 : NetworkBehaviour
 
 
 
-	public void SendMovementInput(Vector2 input)
+	public void SendMovementInput(Vector2 input, float cameraYaw)
     {
-        SubmitInputServerRpc(input);
+        SubmitInputServerRpc(input, cameraYaw);
     }
 
     public void RequestJump()

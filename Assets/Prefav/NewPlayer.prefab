@@ -298,6 +298,38 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.14
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &3770238031521285063
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8813181870610930825}
+  m_Layer: 0
+  m_Name: CamaraPivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8813181870610930825
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3770238031521285063}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 555056607498335939}
+  m_Father: {fileID: 3647514135885544567}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5035874944366792459
 GameObject:
   m_ObjectHideFlags: 0
@@ -344,7 +376,7 @@ Transform:
   - {fileID: 7975636323346320750}
   - {fileID: 5432909137100476237}
   - {fileID: 1346288293832203170}
-  - {fileID: 555056607498335939}
+  - {fileID: 8813181870610930825}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2575506566635956088
@@ -643,6 +675,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
+  camera: {fileID: 8813181870610930825}
 --- !u!114 &4164537751234471969
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -657,7 +690,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController1
   ShowTopMostFoldoutHeaderGroup: 1
   movement: {fileID: -3979576838214846226}
-  visuals: {fileID: 0}
+  visuals: {fileID: 8260805260637375686}
   speed: 5
   audioSource: {fileID: 4536261925985699810}
   playerRenderer: {fileID: 7190860703376971391}
@@ -679,6 +712,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInput
   ShowTopMostFoldoutHeaderGroup: 1
   playerController: {fileID: 4164537751234471969}
+  cameraPivot: {fileID: 8813181870610930825}
 --- !u!114 &8260805260637375686
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -854,12 +888,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7479849001827107065}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.13485095, y: 0, z: 0, w: 0.9908659}
-  m_LocalPosition: {x: 0, y: 1.83, z: -10}
+  m_LocalRotation: {x: 0.13485095, y: -0, z: -0, w: 0.9908659}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3647514135885544567}
+  m_Father: {fileID: 8813181870610930825}
   m_LocalEulerAnglesHint: {x: 15.5, y: 0, z: 0}
 --- !u!114 &4140969991723286875
 MonoBehaviour:

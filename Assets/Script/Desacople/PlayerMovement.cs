@@ -1,3 +1,4 @@
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -20,6 +21,8 @@ public class PlayerMovement : MonoBehaviour
 
     private bool movementLocked = false;
 
+    [SerializeField] Transform camera;
+    private float cameraYaw;
 
 
     private void Awake()
@@ -30,10 +33,11 @@ public class PlayerMovement : MonoBehaviour
 
     //REcibe llos datos de los inputs pero no lee el teclado
     //Nos indica la dirección de movimiento
-    public void SetInput(Vector2 input)
+    public void SetInput(Vector2 input, float yaw)
     {
         //Hacemos que las diagonales no sean mas rapidas y limitamos la magnitud de entrada a 1
         inputVector = Vector2.ClampMagnitude(input, 1f);
+        cameraYaw = yaw;
 
     }
 
@@ -71,29 +75,29 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //Si este jugador no simula física, no hacemos nada
         if (!simulationEnabled) return;
-		if (movementLocked) return;
+        if (movementLocked) return;
 
-		//lanzamos un rayo hacia abajo para comprobar el suelo
-		isGrounded = Physics.Raycast(groundCheck.position, Vector3.down, groundDistance, groundLayer);
+        isGrounded = Physics.Raycast(groundCheck.position, Vector3.down, groundDistance, groundLayer);
+        //1.  creamos una rotación utilizando el ángulo horizontal de la cámara
+        Quaternion cameraRotation = Quaternion.Euler(0f, cameraYaw, 0f);
 
-        // convertimos la entrada 2d en una dirección 3d
-        // x controla el movimiento saltera y z el avance
-        Vector3 moveDirection = new Vector3(inputVector.x, 0f, inputVector.y);
+        // 2. Obtenemos las direcciones relativas a la cámara
+        Vector3 cameraForward = cameraRotation * Vector3.forward;
+        Vector3 cameraRight = cameraRotation * Vector3.right;
 
-        //convertimos la dirección en una velocidad horizontal
+        // 3. Combinamos ambas direcciones con el input
+        Vector3 moveDirection = cameraForward * inputVector.y + cameraRight * inputVector.x;
+
+        // 5. Ajustamos parta que el movimiento diagonal no sea mas rápido que el movimiento en línia recta
+        moveDirection = Vector3.ClampMagnitude(moveDirection, 1f);
+
         Vector3 targetVelocity = moveDirection * speed;
-        
-        //Modificamos X y Z, pero conservamos la velocidad Y
-        //No anulamos la gravedad ni la caida del jugador
-        rb.linearVelocity = new Vector3(targetVelocity.x, rb.linearVelocity.y, targetVelocity.z);
 
-        // si hay movimiento orientamos al jugador hacia la dirección en la que se desplaza
-        if (moveDirection.sqrMagnitude > 0.01f) 
-        {
+        rb.linearVelocity = new Vector3( targetVelocity.x, rb.linearVelocity.y, targetVelocity.z);
+
+        if (moveDirection.sqrMagnitude > 0.01f)
             transform.rotation = Quaternion.LookRotation(moveDirection);
-        }
     }
 
 }

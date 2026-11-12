@@ -6,6 +6,7 @@ using Unity.Netcode;
 public class PlayerInput : NetworkBehaviour
 {
     [SerializeField] private PlayerController1 playerController;
+    [SerializeField] private Transform cameraPivot;
 
 
 	private void Awake()
@@ -49,7 +50,9 @@ public class PlayerInput : NetworkBehaviour
 
 		Vector2 input = Vector2.ClampMagnitude( new Vector2(h, v), 1f);
 
-        playerController.SendMovementInput(input);
+        float cameraYaw = cameraPivot.eulerAngles.y;
+
+        playerController.SendMovementInput(input, cameraYaw);
 
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
             playerController.RequestJump();

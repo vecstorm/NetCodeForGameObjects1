@@ -5,7 +5,21 @@ public class FadingTile : NetworkBehaviour
 {
     [SerializeField] private float fadeDuration = 3f;
 
-    private NetworkVariable<double> fadeStartTime = new NetworkVariable<double>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    // Momento en el que empieza a desaparecer
+    private NetworkVariable<double> fadeStartTime =
+        new NetworkVariable<double>(
+            -1,
+            NetworkVariableReadPermission.Everyone,
+            NetworkVariableWritePermission.Server
+        );
+
+    // Indica si la baldosa ya ha desaparecido definitivamente
+    private NetworkVariable<bool> isGone =
+        new NetworkVariable<bool>(
+            false,
+            NetworkVariableReadPermission.Everyone,
+            NetworkVariableWritePermission.Server
+        );
 
     private Renderer[] tileRenderers;
     private Collider tileCollider;
@@ -24,19 +38,30 @@ public class FadingTile : NetworkBehaviour
         }
     }
 
+    public override void OnNetworkSpawn()
+    {
+        if (isGone.Value)
+        {
+            Disappear();
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
+        if (!IsSpawned || isGone.Value)
+            return;
+
         if (!other.transform.root.CompareTag("Player"))
             return;
 
         RequestFadeRpc();
     }
 
+    // El servidor recibe la petición
     [Rpc(SendTo.Server, RequireOwnership = false)]
     private void RequestFadeRpc()
     {
-        // Solo el servidor puede iniciar el proceso.
-        if (fadeStartTime.Value >= 0)
+        if (isGone.Value || fadeStartTime.Value >= 0)
             return;
 
         fadeStartTime.Value = NetworkManager.ServerTime.Time;
@@ -44,14 +69,26 @@ public class FadingTile : NetworkBehaviour
 
     void Update()
     {
-        if (!IsSpawned || fadeStartTime.Value < 0)
+        if (!IsSpawned)
             return;
 
-        double elapsed = NetworkManager.ServerTime.Time - fadeStartTime.Value;
+        if (isGone.Value)
+        {
+            Disappear();
+            return;
+        }
 
-        float alpha = Mathf.Clamp01(1f - (float)(elapsed / fadeDuration));
+        if (fadeStartTime.Value < 0)
+            return;
 
-        // Aplicar el desvanecimiento en todos los jugadores.
+        double elapsed =
+            NetworkManager.ServerTime.Time - fadeStartTime.Value;
+
+        float alpha = Mathf.Clamp01(
+            1f - (float)(elapsed / fadeDuration)
+        );
+
+        // Todos los jugadores actualizan la transparencia
         foreach (Material[] materialArray in materials)
         {
             foreach (Material mat in materialArray)
@@ -71,13 +108,24 @@ public class FadingTile : NetworkBehaviour
             }
         }
 
-        if (elapsed >= fadeDuration)
+        // Cuando termina el tiempo, el servidor confirma
+        // que la baldosa ha desaparecido definitivamente.
+        if (elapsed >= fadeDuration && IsServer)
         {
-            foreach (Renderer rend in tileRenderers)
-                rend.enabled = false;
+            isGone.Value = true;
+        }
+    }
 
-            if (tileCollider != null)
-                tileCollider.enabled = false;
+    private void Disappear()
+    {
+        foreach (Renderer rend in tileRenderers)
+        {
+            rend.enabled = false;
+        }
+
+        if (tileCollider != null)
+        {
+            tileCollider.enabled = false;
         }
     }
 }

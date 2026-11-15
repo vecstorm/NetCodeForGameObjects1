@@ -2995,6 +2995,7 @@ GameObject:
   - component: {fileID: 971444773}
   - component: {fileID: 971444772}
   - component: {fileID: 971444775}
+  - component: {fileID: 971444776}
   m_Layer: 0
   m_Name: CanvasNetwork
   m_TagString: Untagged
@@ -3061,6 +3062,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerLobbyListUI
   Content: {fileID: 253077270}
   PlayerPrefab: {fileID: 4112425878225692354, guid: e8a3222652dee5545bade3eaa5bd77f4, type: 3}
+--- !u!114 &971444776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 971444771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61c62bea7f1b6fe4da6b01414ac57c69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ClientNamePanel
+  NameInputClient: {fileID: 1730365842}
 --- !u!1 &1056488912
 GameObject:
   m_ObjectHideFlags: 0
@@ -6461,7 +6475,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb724c1e9ff5834e90aef4c0833b858, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HostNamePanel
-  NameInput: {fileID: 890166863}
+  NameInputHost: {fileID: 890166863}
 --- !u!114 &2146995565
 MonoBehaviour:
   m_ObjectHideFlags: 0

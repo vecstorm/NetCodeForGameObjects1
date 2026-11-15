@@ -7,6 +7,6 @@ public class PlayerLobbyItem : MonoBehaviour
 
     public void SetPlayerName(string namePlayer)
     {
-        textName.text = namePlayer;
+        textName.text = namePlayer; 
     }
 }

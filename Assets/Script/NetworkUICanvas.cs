@@ -9,19 +9,20 @@ using System;
 
 public class NetworkUICanvas : MonoBehaviour
 {
+    
     [SerializeField] private Button ButtonCreateServer;
     [SerializeField] private Button ButtonJoinServer;
 
     [SerializeField] private TextMeshProUGUI ServerIPText;
     [SerializeField] private TMP_InputField InputServerIP;
 
-    [SerializeField] private ushort port = 7777;
+    [SerializeField] private ushort port = 7777; //Puerto de conexion
 
     [SerializeField] private TMP_InputField InputPlayerName;
 
 
     private NetworkManager manager;
-    private UnityTransport transport;
+    private UnityTransport transport; //transporte de datos entre dispositivos
 
     private void Start()
     {
@@ -49,17 +50,17 @@ public class NetworkUICanvas : MonoBehaviour
 
     private void CreateServer()
     {
-        PlayerPrefs.SetString("PlayerName", InputPlayerName.text.Trim());
+        PlayerPrefs.SetString("PlayerName", InputPlayerName.text.Trim()); //Guardamos en playerprefs el nombre del jugador (host)
 
         transport.SetConnectionData("127.0.0.1", port, "0.0.0.0");
 
-        bool started = manager.StartHost();
+        bool started = manager.StartHost(); //Se inicia el modo HOST
 
-        if (started)
+        if (started) //si se ha iniciado
         {
-            string ip = GetLocalIP();
+            string ip = GetLocalIP(); //gaurda la ip en un string
 
-            ServerIPText.text = "Ip: " + ip + ":" + port;
+            ServerIPText.text = "Ip: " + ip + ":" + port; //se imprime por pantalla
 
             Debug.Log("Servidor creado" + ip);
         }
@@ -69,11 +70,11 @@ public class NetworkUICanvas : MonoBehaviour
         }
     }
 
-    private string GetLocalIP()
+    private string GetLocalIP() //metodo para sacar la IP local
     {
-        foreach (IPAddress ip in Dns.GetHostEntry(Dns.GetHostName()).AddressList)
+        foreach (IPAddress ip in Dns.GetHostEntry(Dns.GetHostName()).AddressList) //recorremos todas las direcciones IP de nuestro PC
         {
-            if (ip.AddressFamily == AddressFamily.InterNetwork && !IPAddress.IsLoopback(ip))
+            if (ip.AddressFamily == AddressFamily.InterNetwork && !IPAddress.IsLoopback(ip)) //buscamos una dirección IPv4 que no sea de loopback
             {
                 return ip.ToString();
             }
@@ -82,11 +83,12 @@ public class NetworkUICanvas : MonoBehaviour
         return "127.0.0.1";
     }
 
-    private void JoinServer()
+    private void JoinServer() //metodo para unirte al servidor
     {
-        PlayerPrefs.SetString("PlayerName", InputPlayerName.text.Trim());
+        PlayerPrefs.SetString("PlayerName", InputPlayerName.text.Trim()); //guardamos el nombre del jugador (clientes)
+        PlayerPrefs.Save();
 
-        string ip = InputServerIP.text.Trim();
+        string ip = InputServerIP.text.Trim(); //se obtiene la ip que ha introducido el cliente eliminando espacios
 
         if (string.IsNullOrEmpty(ip))
         {
@@ -94,10 +96,9 @@ public class NetworkUICanvas : MonoBehaviour
             return;
         }
 
+        transport.SetConnectionData(ip, port); //configuramos el transport para que se conecte a la ip que ha puesto el jugador
 
-        transport.SetConnectionData(ip, port);
-
-        bool connected = manager.StartClient();
+        bool connected = manager.StartClient(); //se inicia el cliente
 
         if (!connected)
         {
@@ -105,5 +106,5 @@ public class NetworkUICanvas : MonoBehaviour
         }
     }
 
- 
+
 }

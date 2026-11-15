@@ -4,11 +4,11 @@ using TMPro;
 
 public class HostNamePanel : MonoBehaviour
 {
-    [SerializeField] private TMP_InputField NameInput;
+    [SerializeField] private TMP_InputField NameInputHost;
 
-    public void ValidateName()
+    public void ValidateName()//metodo que valida el nombre del host 
     {
-        string playerName = NameInput.text.Trim();
+        string playerName = NameInputHost.text.Trim();
 
         if (string.IsNullOrEmpty(playerName))
         {
@@ -32,7 +32,7 @@ public class HostNamePanel : MonoBehaviour
 
         PlayerNameNetwork playerNameNetwork =playerObject.GetComponent<PlayerNameNetwork>();
 
-        playerNameNetwork.SubmitPlayerName(playerName);
+        playerNameNetwork.SubmitPlayerName(playerName);//envia el nombre que introduce el host al playerNameNetwork para actualizarlo
 
     }
 }

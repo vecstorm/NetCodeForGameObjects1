@@ -70,7 +70,7 @@ public class FadingTile : NetworkBehaviour
 
 
 
-    [Rpc(SendTo.Server, RequireOwnership = false)] //Cualquier cliente puede pedir al servidor que haga desaparecer la baldosa
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)] //Cualquier cliente puede pedir al servidor que haga desaparecer la baldosa
     private void RequestFadeRpc()
     {
 

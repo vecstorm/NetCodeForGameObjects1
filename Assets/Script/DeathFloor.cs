@@ -14,7 +14,7 @@ public class DeathFloor : MonoBehaviour
         
     }
 
-    [Rpc(SendTo.Server, RequireOwnership = false)]
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     private void KillPlayerRPC(NetworkObjectReference playerReference)
     {
         if (!playerReference.TryGet(out NetworkObject playerObject))

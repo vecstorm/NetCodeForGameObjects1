@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CanvasController : MonoBehaviour
 {
@@ -13,5 +14,6 @@ public class CanvasController : MonoBehaviour
     {
         canvas.SetActive(false);
     }
+
 
 }

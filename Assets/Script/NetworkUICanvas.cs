@@ -14,6 +14,7 @@ public class NetworkUICanvas : MonoBehaviour
     [SerializeField] private Button ButtonJoinServer;
 
     [SerializeField] private TextMeshProUGUI ServerIPText;
+    [SerializeField] private TextMeshProUGUI ServerIPTextPublic;
     [SerializeField] private TMP_InputField InputServerIP;
 
     [SerializeField] private ushort port = 7777; //Puerto de conexion
@@ -60,13 +61,35 @@ public class NetworkUICanvas : MonoBehaviour
         {
             string ip = GetLocalIP(); //gaurda la ip en un string
 
-            ServerIPText.text = "Ip: " + ip + ":" + port; //se imprime por pantalla
+            string publicIP = GetPublicIP();
 
-            Debug.Log("Servidor creado" + ip);
+            ServerIPText.text = "Ip: " + ip + ":" + port; //se imprime por pantalla la ip privada
+
+            ServerIPTextPublic.text = "Ip publica: " + publicIP + ":" + port; //se imprime por pantalla la ip publica
+
+            Debug.Log("Servidor local creado" + ip);
+            Debug.Log("Servidor public creado" + publicIP);
+
         }
         else
         {
             Debug.LogError("No se ha podido crear el servidor.");
+        }
+    }
+
+    private string GetPublicIP()
+    {
+        try
+        {
+            using (WebClient client = new WebClient())
+            {
+                return client.DownloadString("https://api.ipify.org").Trim();
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Error obteniendo la IP pública: " + e.Message);
+            return "No disponible";
         }
     }
 

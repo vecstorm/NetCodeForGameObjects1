@@ -12,6 +12,7 @@ public class NetworkUICanvas : MonoBehaviour
     
     [SerializeField] private Button ButtonCreateServer;
     [SerializeField] private Button ButtonJoinServer;
+    [SerializeField] private Button ButtonDisconnectServer;
 
     [SerializeField] private TextMeshProUGUI ServerIPText;
     [SerializeField] private TextMeshProUGUI ServerIPTextPublic;
@@ -47,6 +48,12 @@ public class NetworkUICanvas : MonoBehaviour
         // Conectamos cada botón con su método.
         ButtonCreateServer.onClick.AddListener(CreateServer);
         ButtonJoinServer.onClick.AddListener(JoinServer);
+        ButtonDisconnectServer.onClick.AddListener(DisconnectServer); 
+    }
+
+    public void DisconnectServer()
+    {
+        NetworkManager.Singleton.Shutdown();
     }
 
     private void CreateServer()
